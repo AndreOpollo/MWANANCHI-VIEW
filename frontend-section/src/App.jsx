@@ -1,17 +1,30 @@
 import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
+import React from 'react'
 import './App.css'
 import Login from './components/Login'
 import Register from './components/Register'
+import Submission from './components/Submission'
+import Sidebar from './components/Sidebar'
+import { Route, Routes } from 'react-router-dom'
+import Distribution from './components/Distribution'
+import Downloads from './components/Downloads'
+import Bookmarks from './components/Bookmarks'
+import Report from './components/Report'
 
 function App() {
   const [count, setCount] = useState(0)
 
   return (
-    <div  className='text-black h-[100vh] flex justify-center items-center'>
+    <div  className='flex'>
 
-      <Register/>
+      <Sidebar/>
+      <Routes>
+        <Route path='/' element={<Distribution/>}/>
+        <Route path='download-history' element={<Downloads/>}/>
+        <Route path='submission' element={<Submission/>}/>
+        <Route path='bookmarks' element={<Bookmarks/>}/>
+        <Route path='report-problem' element={<Report/>}/>
+      </Routes>
     </div>
   )
 }
