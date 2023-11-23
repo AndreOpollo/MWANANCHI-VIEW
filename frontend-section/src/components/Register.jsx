@@ -4,10 +4,12 @@ import { DevTool } from '@hookform/devtools'
 import { Axios } from 'axios'
 
 function Register() {
+    const URL= ('')/**PASTE URL HERE     */
     const form = useForm()
     const{register,formState,handleSubmit,watch,control,reset} = form
     const{errors}=formState
     const onSubmit = (data)=>{
+        Axios.post(URL,data)
         console.log('Form submitted',data)
         reset()
     }
