@@ -1,6 +1,6 @@
-from .views import CountyServicesPredictionAPI
-from django.urls import path
 
+from django.urls import path
+from .views import PredictionPerServiceByCountyAPI
 urlpatterns = [
-    path('predictions/<county>', CountyServicesPredictionAPI.as_view(), name='predictions'),
+   path('services/<county>/', PredictionPerServiceByCountyAPI.as_view(), name='services'),
 ]

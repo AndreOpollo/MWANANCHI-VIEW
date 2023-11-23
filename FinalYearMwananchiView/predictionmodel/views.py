@@ -1,60 +1,50 @@
+
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
-from api.models import CountyServices
+from api.models import CountyServices,ServiceImprovementRequest
 import joblib
-import nltk
-import string
+import numpy as np
+from django.http import JsonResponse
 
-class CountyServicesPredictionAPI(APIView):
 
-    def get_services(self, county):
-        # Retrieve and filter services based on the specified county
-        try:
-            county_services = CountyServices.objects.get(county=county)
-            services = county_services.services.split(',')
-        except CountyServices.DoesNotExist:
-            services = None
 
-        return services
-    def preprocess(services):
-        service_lower=services.lower()
-        tokens=nltk.wordpunct_tokenize(service_lower)
-        bog_representation=nltk.FreqDist(tokens)
-        return bog_representation
+#import nltk
+#import string
+#from sklearn.feature_extraction.text import CountVectorizer
+#from sklearn.preprocessing import LabelEncoder
 
-    
-
-    def predict(self, bog_representation):
-        # Convert services into a string for prediction
-        #services_string = ' '.join(services)
-
-        # Load the NLP prediction model
-        with open('predictionmodel/prelim_model.pkl', 'rb') as f:
-            model = joblib.load(f)
-
-        # Make predictions using the model
-        predictions = model.predict(bog_representation)
-
-        # Convert predictions to JSON format
-        #predictions_json = {'predictions': predictions}
-        return predictions
-
+class PredictionPerServiceByCountyAPI(APIView):
     def get(self, request, county):
-        # Retrieve and analyze services for the specified county
-        services = self.get_services(county)
+        service_improvement_requests = ServiceImprovementRequest.objects.filter(county=county)
+        services = []
+        for request in service_improvement_requests:
+            services.append(request.service)
 
-        if services:
-            # Make predictions for all services without looping
-            predictions = self.predict(services)
-            predictions_json = {'predictions': predictions}
-            return Response(predictions_json, status=status.HTTP_200_OK)
-        else:
-            return Response({'error': 'No services found for county: ' + county}, status=status.HTTP_404_NOT_FOUND)
+        # Analyze the services using an NLP model
+        with open('predictionmodel/pre_model.pkl', 'rb') as f:
+         model = joblib.load(f)
 
+        # Analyze services one by one and make predictions
+         predictions = []
+         for service in services:
+        
+                prediction = model.predict([service])
+                predictions.append({'service': service, 'prediction': prediction})
 
+        return Response(predictions, status=status.HTTP_200_OK)
+        #return JsonResponse({"county": county, "services": services})
 
+    #def get(self, request, county):
+        # Retrieve services based on the specified county
+        #try:
+           # county_services = CountyServices.objects.filter(county=county)
+           # services = [service.services for service in county_services]
+        #except CountyServices.DoesNotExist:
+           # return Response(status=status.HTTP_404_NOT_FOUND)
 
+        # Load the NLP model
+      
 
 
 

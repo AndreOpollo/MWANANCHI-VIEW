@@ -30,22 +30,49 @@ class ResidentProfile(models.Model):
 
     def __str__(self):
         return str(self.user)
+    
   
 
     
+#class CountyServices(models.Model):
+      
+      #county = models.CharField(max_length=255)
+      #services = models.TextField(unique=False)
+
+
+
+      #def __str__(self):
+        #return f'{self.county}: {self.services}'
+      
+      
+#class Service(models.Model):
+    #service_name = models.CharField(max_length=255)
+
+
+    #def __str__(self):
+      #  return self.service_name   
+#class County(models.Model):
+  # county_name = models.CharField(max_length=255)
+   #services = models.ManyToManyField(Service, related_name='counties')
+
+   #def __str__(self):
+     #   return self.county_name
+class ServiceImprovementRequest(models.Model):
+    county = models.CharField(max_length=255)
+    service = models.TextField()
+    
+
+    def __str__(self):
+        return f"{self.county}: {self.service} "  
+
+
 class CountyServices(models.Model):
-      
-      county = models.CharField(max_length=255)
-      services = models.TextField(unique=False)
+   
+    service_improvement_requests = models.ManyToManyField('ServiceImprovementRequest', blank=True)
 
-
-
-      def __str__(self):
-        return f'{self.county}: {self.services}'
-      
-      
-    
-    
+    def __str__(self):
+        return f"{self.service_improvement_requests}"
+   
 
 
 class Report(models.Model):
