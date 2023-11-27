@@ -12,16 +12,17 @@ function Login() {
     const navigate = useNavigate()
     const onSubmit = async (data) =>{
       try {
-        const response= await axios.post(URL,data)
-        if(response.status === 200){
-          alert('Login Successful')
-          console.log('Login submitted successfully',response.data)
-        }
+       // const response= await axios.post(URL,data)
+       // if(response.status === 200){
+        //  alert('Login Successful')
+         navigate('sidebar')
+         console.log('Login submitted successfully',response.data)
+        //}
        
-        else{
-          alert('Login Unsuccessful')
-          console.log('Login submitted successfully',response.data)
-        }
+        //else{
+        //  alert('Login Unsuccessful')
+        //  console.log('Login submitted unsuccessfully',response.data)
+       // }
       } catch (error) {
         
         console.log('Error',error.message)
@@ -59,7 +60,7 @@ function Login() {
                
               <div className="flex justify-between items-center">
               <Link to='' className="text-blue-500">Forgot Password?</Link>
-              <Link to='' className="text-blue-500">Create Account</Link>
+              <Link to='register' className="text-blue-500">Create Account</Link>
                </div>
            
        

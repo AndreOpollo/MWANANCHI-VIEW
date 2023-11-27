@@ -64,6 +64,12 @@ function Sidebar() {
             Download History                  
           </span>
         </Link>
+        <Link to = 'report-problem' className= 'flex  rounded-md mt-4 p-2 cursor-pointer hover:bg-light-white text-gray-300 text-sm font-semibold items-center gap-x-4'>
+          <img src={Logo} />
+          <span className={`${!open && "hidden"} origin-left duration-200`}>
+            Report Problem                  
+          </span>
+        </Link>
     
     </ul>
    

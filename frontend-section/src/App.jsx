@@ -16,13 +16,13 @@ function App() {
 
   return (
     <div  className='flex'>
-     
+     <Sidebar/>
       
       <Routes>
         <Route path='/' element={<Login/>}/>
         <Route path='sidebar'element={<Sidebar/>}/>
         <Route path='register' element={<Register/>}/>
-        <Route path='sidebar/distribution' element={<Distribution/>}/>
+        <Route path='distribution' element={<Distribution/>}/>
         <Route path='download-history' element={<Downloads/>}/>
         <Route path='submission' element={<Submission/>}/>
         <Route path='bookmarks' element={<Bookmarks/>}/>

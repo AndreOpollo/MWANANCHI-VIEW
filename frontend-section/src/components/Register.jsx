@@ -1,4 +1,5 @@
 import React from 'react'
+import { Link } from 'react-router-dom'
 import { useForm} from 'react-hook-form'
 import { DevTool } from '@hookform/devtools'
 import axios from 'axios'
@@ -14,7 +15,9 @@ function Register() {
         reset()
     }
   return (
-    <div>
+    <div className='container mx-auto'>
+
+      <div className='flex h-screen items-center justify-center'>
         <div className="bg-slate-800 border border-slate-600 rounded-md p-8 shadow-lg backdrop-filter backdrop-blur-lg bg-opacity-30 relative transition-all duration-200">
       <h1 className="text-4xl font-bold text-center mb-8">Register</h1>
       <form onSubmit={handleSubmit(onSubmit)} noValidate>
@@ -74,8 +77,12 @@ function Register() {
        
         
       </form>
+      <div className="flex justify-between items-center">
+              <Link to='/' className="text-blue-500">Already have an account?Login</Link>
+               </div>
     </div>
     <DevTool control={control}/>
+    </div>
 
     </div>
   )
