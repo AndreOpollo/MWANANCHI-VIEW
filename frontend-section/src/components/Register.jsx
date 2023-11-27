@@ -1,7 +1,7 @@
 import React from 'react'
 import { useForm} from 'react-hook-form'
 import { DevTool } from '@hookform/devtools'
-import { Axios } from 'axios'
+import axios from 'axios'
 
 function Register() {
     const URL= ('')/**PASTE URL HERE     */
@@ -9,7 +9,7 @@ function Register() {
     const{register,formState,handleSubmit,watch,control,reset} = form
     const{errors}=formState
     const onSubmit = (data)=>{
-        Axios.post(URL,data)
+        axios.post(URL,data)
         console.log('Form submitted',data)
         reset()
     }

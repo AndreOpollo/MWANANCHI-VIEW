@@ -1,6 +1,6 @@
 import React from 'react'
 import { useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link} from 'react-router-dom'
 import Logo from '../assets/logo.png'
 import Control from '../assets/control.png'
 import kenyan from '../assets/kenyan2.jpg'
@@ -40,7 +40,7 @@ function Sidebar() {
     </div>
     <ul className="pt-6">
       
-        <Link to='/'className= 'flex  rounded-md mt-4 p-2 cursor-pointer hover:bg-light-white text-gray-300 text-sm font-semibold items-center gap-x-4'>
+        <Link to='distribution'className= 'flex  rounded-md mt-4 p-2 cursor-pointer hover:bg-light-white text-gray-300 text-sm font-semibold items-center gap-x-4'>
           <img src={Logo}/>
           <span className={`${!open && "hidden"} origin-left duration-200`}>
             View Distribution                        
@@ -66,6 +66,8 @@ function Sidebar() {
         </Link>
     
     </ul>
+   
+    
   </div>
   )
 }
