@@ -38,8 +38,8 @@ function Submission() {
             </div>
        
             <div className='relative my-4'>
-               <textarea type='text' id='submission' {...register('submission',{
-                required:"Submission is required"
+               <textarea type='text' id='service' {...register('service',{
+                required:"Service is required"
                })} className='block w-full py-2.5 px-0  text-sm text-white bg-transparent border-2  border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer'placeholder=''/>
                <label htmlFor='textarea' className='absolute text-sm text-white duration-300  transform -translate-y-6 scale-75 top-0 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6'>Submit Problem</label>
                <p className='text-red-600 text-[10px]'>{errors.submission?.message}</p>
