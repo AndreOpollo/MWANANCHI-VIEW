@@ -1,9 +1,11 @@
+import axios from 'axios'
 import React, { useEffect, useState } from 'react'
 
 function Distribution() {
   const[countyId,setCounty]=useState('')
   const[lineChartData,setLineChartData]=useState({}) 
   const[barChartData,setBarChartData]=useState({})
+  const [data, setData] = useState({});
   const[chartType,setChartType]=useState('')
 
   const handleChartTypeChange = (e)=>{
@@ -19,13 +21,61 @@ function Distribution() {
     console.log('Submit successful',selectedCounty)
     console.log('URL',url)
   }
+useEffect(()=>{
+  const fetchData = async()=>{
+    response = await axios.get(url)
+    const data = response.data
+    setData(data)
+
+  }
+  fetchData
+},[countyId])
 
   useEffect(()=>{
-   // const fetchData = async()=>{
-   //   const apiData = await axios.get(url)
-   // }
+    
+    const updateChart = ()=>{
+      if(data){
+    const labels = Object.keys(data);
+    const propertyValues = labels.map((label) => data[label]);            
+        switch(chartType){
+           case 'line-chart':
+            setLineChartData({
+              labels,
+              datasets:[
+                  {
+                      label:'Revenue',
+                      data:propertyValues,
+                      fill: true,
+                      borderColor: 'rgb(255, 99, 132)',
+                      backgroundColor: 'rgba(255, 99, 132, 0.5)',
+                  },
+              ],
+          })
+          break
+          case 'bar-chart':
+            setBarChartData({
+              labels:labels,
+              datasets:[
+                  {
+                      label:'Revenue',
+                      data:propertyValues,
+                      fill: true,
+                      borderColor: 'rgb(255, 99, 132)',
+                      backgroundColor: 'rgba(255, 99, 132, 0.5)',
+                  },
+              ],
+          })
+          break
+        }
+      }
+    }
+      updateChart()
+         
+      
+
+   
     console.log('Render on county or chartType change')
-  },[countyId,chartType])
+  },[countyId,chartType,data])
 
   
     
@@ -102,6 +152,52 @@ function Distribution() {
         </div>
     </div>
     <p>{countyId}</p>
+    <div className='w-[900px]'ref={chartRef}>
+            
+            {
+              chartType==='line-chart' && lineChartData && lineChartData?.datasets && (
+                <Line
+                options={ {
+                    responsive: true,
+                    plugins: {
+                      legend: {
+                        position: 'top',
+                      },
+                      title: {
+                        display: true,
+                        text: 'Revenue',
+                      },
+                    },
+                  }} 
+                data={lineChartData}
+                
+                />
+               )
+
+            }
+            {
+              chartType==='bar-chart' && barChartData && barChartData?.datasets && (
+                <Bar
+                options={ {
+                    responsive: true,
+                    plugins: {
+                      legend: {
+                        position: 'top',
+                      },
+                      title: {
+                        display: true,
+                        text: 'Revenue',
+                      },
+                    },
+                  }} 
+                data={barChartData}
+                
+                />
+               )
+
+            }
+                          
+        </div>
 
     </div>
   )
