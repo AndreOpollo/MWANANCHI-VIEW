@@ -8,7 +8,7 @@ function Submission() {
     const{register,formState,handleSubmit,watch,control,reset} = form
     const{errors,isDirty, isValid} = formState
     const onSubmit = data =>{
-        axios.post(URL,data)
+        //axios.post(URL,data)
         console.log('form submitted',data)
     }
 
