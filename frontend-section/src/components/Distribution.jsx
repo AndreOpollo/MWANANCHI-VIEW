@@ -28,7 +28,7 @@ useEffect(()=>{
     setData(data)
 
   }
-  fetchData
+  fetchData()
 },[countyId])
 
   useEffect(()=>{
