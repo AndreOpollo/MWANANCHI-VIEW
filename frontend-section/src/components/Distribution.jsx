@@ -1,7 +1,22 @@
 import axios from 'axios'
 import React, { useEffect, useState } from 'react'
+import { Chart as ChartJS, ArcElement, CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend, Filler ,BarElement} from "chart.js";
+import { Line ,Bar} from 'react-chartjs-2';
 
 function Distribution() {
+  ChartJS.register(
+    ArcElement,
+    CategoryScale,
+    LinearScale,
+    PointElement,
+    LineElement,
+    BarElement,
+
+    Title,
+    Tooltip,
+    Legend,
+    Filler
+  );
   const[countyId,setCounty]=useState('Nairobi')
   const[lineChartData,setLineChartData]=useState({}) 
   const[barChartData,setBarChartData]=useState({})
