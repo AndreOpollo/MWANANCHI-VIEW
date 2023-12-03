@@ -10,7 +10,7 @@ import axios from 'axios'
 function Login() {
     const form = useForm()
     const{register,formState,handleSubmit,control,reset} = form
-    const [isLoggedIn, setIsLoggedIn] = useState(false);
+   
     const [showPassword, setShowPassword] = useState(false);
     const handleTogglePasswordVisibility = () => {
       setShowPassword(!showPassword);
@@ -22,15 +22,15 @@ function Login() {
       try {
       const response= await axios.post(URL,data)
        if(response.status === 200){
-        localStorage.setItem('loggedIn', 'true');
-        toast.success('Login successful!');
+       
+        alert('Login successful!');
         reset()        
-        navigate('sidebar')
+        navigate('/home')
         console.log('Login submitted successfully',response.data)
         }
          else{
-          console.error(response.error);
-          toast.error('Login failed. Please check your username or password!.');
+          console.log(response.error);
+          alert('Login failed. Please check your username or password!.');
        }
       } catch (error) {
         

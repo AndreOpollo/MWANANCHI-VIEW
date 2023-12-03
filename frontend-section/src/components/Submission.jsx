@@ -14,13 +14,14 @@ function Submission() {
 
 
   return (
-      <div className='flex items-center justify-center h-screen mx-48'>
-      <div className=' bg-slate-500 rounded-md border h-auto w-auto flex-1 flex-col items-center border-slate-600 m-32 p-8 shadow-lg backdrop-filter backdrop-blur-lg  relative transition-all duration-200'>
-            <h1 className='text-4xl text-white font-bold text-center mb-6' >Submission Form</h1>
+    
+    <div className='container mx-auto bg-white'>
+    <div className='flex h-screen items-center justify-center'>
+        <div className=' bg-slate-900 border border-slate-600  rounded-md p-8 shadow-lg backdrop-filter backdrop-blur-lg bg-opacity-30 relative transition-all duration-200'>
+            <h1 className='text-4xl text-white font-bold text-center mb-6' >Submission</h1>
             <form onSubmit={handleSubmit(onSubmit)} noValidate>
-          
-            <div className='relative my-4 mx-2 '>
-            <select  className='w-full font-medium  p-1'id="county" {...register('county')}> 
+            <div className='relative my-4'>
+            <select  className=' w-96 font-medium  p-1'id="county" {...register('county')}> 
                   <option disabled selected>Select County</option>              
                   <option value='Baringo'>Baringo</option>
                   <option value='Bomet'>Bomet</option>
@@ -72,22 +73,25 @@ function Submission() {
              </select>
                
             </div>
-
        
-            <div className='relative my-4 mx-2 font-medium'>
-               <textarea type='text' id='service' {...register('service',{
+            <div className='relative my-4'>
+
+            <textarea type='text' id='service' {...register('service',{
                 required:"Service is required"
-               })} className='block w-full py-2.5 px-0  text-sm text-white bg-transparent border-2  border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer'placeholder=''/>
-               <label htmlFor='textarea' className='absolute text-sm text-white duration-300  transform -translate-y-6 scale-75 top-0 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6'>Submit Problem</label>
+               })} className='block w-96 py-2.5 px-0  text-sm text-white bg-transparent border-2  border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer'placeholder=''/>
+               <label htmlFor='textarea' className='' placeholder='Submit Problem'></label>
                <p className='text-red-600 text-[10px]'>{errors.submission?.message}</p>
-            </div>
+               </div>
+           
 
             <button disabled={!isDirty || !isValid} className="w-full mb-4 text-[18px] mt-6 rounded-full bg-white text-emerald-800 hover:bg-emerald-600 hover:text-white py-2 transition-colors duration-300" type="submit">Submit</button>
             </form>
             </div>
+            </div>
            
        
         </div>
+    
     
   )
 }

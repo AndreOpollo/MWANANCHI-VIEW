@@ -7,57 +7,39 @@ import Submission from './components/Submission'
 import Sidebar from './components/Sidebar'
 import { Outlet, Route, Routes } from 'react-router-dom'
 import Distribution from './components/Distribution'
-import Downloads from './components/Downloads'
-import Bookmarks from './components/Bookmarks'
+
+
 import Report from './components/Report'
-import ProtectedRoute from './auth/ProtectedRoute'
+import LandingPage from './components/LandingPage'
+import NavBar from './components/NavBar'
+
 
 
 
 function App() {
-  const[isLoggedIn,setIsLoggedIn] = useState(true)
-  useEffect(() => {
-    // Check if the user is logged in based on cookies or session storage
-    const loggedIn = localStorage.getItem('loggedIn') === 'true';
-    setIsLoggedIn(loggedIn);
-  }, []);
-
-  const handleLoginSuccess = () => {
-    // Update the isLoggedIn state based on the login attempt result
-    setIsLoggedIn(true);
-  };
+  
 
   return (
     <div  className='flex'>
-      {/* {isLoggedIn && <Sidebar/>} */}
+      {/* <NavBar/> */}
       
      
       
       <Routes>
+      <Route path='/' element={<LandingPage/>}/>
       <Route
-          path="/login"
+          path="login"
           element={
-            <Login
-              handleLoginAttempt={Login}
-              handleLoginSuccess={handleLoginSuccess}
-            />
-          }
-        />
+            <Login/>
+          } />
        
          <Route
-          path="sidebar"
-          
-              
-          element={<ProtectedRoute element={<><Sidebar/>
-          <div className='main-content'>
-          <Outlet />
-        </div></>} isLoggedIn={isLoggedIn} />}
-        >
-         <Route path='distribution' element={<Distribution/>}/>
-        <Route path='download-history' element={<Downloads/>}/>
+          path="home" 
+          element={<NavBar/>}>
+        <Route path='distribution' element={<Distribution/>}/>
         <Route path='submission' element={<Submission/>}/>
-        <Route path='bookmark' element={<Bookmarks/>}/>
         <Route path='report' element={<Report/>}/>
+             
         </Route>
        
         <Route path='register' element={<Register/>}/>
