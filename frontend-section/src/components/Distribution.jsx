@@ -1,9 +1,75 @@
 import axios from 'axios'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState,useRef } from 'react'
 import { Chart as ChartJS, ArcElement, CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend, Filler ,BarElement} from "chart.js";
-import { Line ,Bar} from 'react-chartjs-2';
+import { Line ,Bar,Pie,Doughnut,Scatter} from 'react-chartjs-2';
+import { jsPDF } from 'jspdf';
+import html2canvas from 'html2canvas';
+import { BiChevronDown } from 'react-icons/bi';
+import { AiOutlineSearch } from 'react-icons/ai';
+import Sidebar from './Sidebar';
 
 function Distribution() {
+
+  const charts = [
+    { name: 'Line Chart', value: 'line-chart' },
+    { name: 'Bar Chart', value: 'bar-chart' },
+    { name: 'Pie Chart', value: 'pie-chart' },
+    { name: 'Scatter Chart', value: 'scatter-chart' },
+      { name: 'Dougnut Chart', value: 'Doughnut-chart' },
+
+  ];
+  const counties = [
+    { name: "Baringo", value: "Baringo" },
+    { name: "Bomet", value: "Bomet" },
+    { name: "Bungoma", value: "Bungoma" },
+    { name: "Busia", value: "Busia" },
+    { name: "Elgeyo Marakwet", value: "ElgeyoMarakwet" },
+    { name: "Embu", value: "Embu" },
+    { name: "Garissa", value: "Garissa" },
+    { name: "Homabay", value: "HomaBay" },
+    { name: "Isiolo", value: "Isiolo" },
+    { name: "Kajiado", value: "Kajiado" },
+    { name: "Kakamega", value: "Kakamega" },
+    { name: "Kericho", value: "Kericho" },
+    { name: "Kiambu", value: "Kiambu" },
+    { name: "Kilifi", value: "Kilifi" },
+    { name: "Kirinyaga", value: "Kirinyanga" },
+    { name: "Kisii", value: "Kisii" },
+    { name: "Kisumu", value: "Kisumu" },
+    { name: "Kitui", value: "Kitui" },
+    { name: "Kwale", value: "Kwale" },
+    { name: "Laikipia", value: "Laikipia" },
+    { name: "Lamu", value: "Lamu" },
+    { name: "Machakos", value: "Machakos" },
+    { name: "Makueni", value: "Makueni" },
+    { name: "Mandera", value: "Mandera" },
+    { name: "Meru", value: "Meru" },
+    { name: "Migori", value: "Migori" },
+    { name: "Marsabit", value: "Marsabit" },
+    { name: "Mombasa", value: "Mombasa" },
+    { name: "Muranga", value: "Murang'a" },
+    { name: "Nairobi", value: "Nairobi" },
+    { name: "Nakuru", value: "Nakuru" },
+    { name: "Nandi", value: "Nandi" },
+    { name: "Narok", value: "Narok" },
+    { name: "Nyamira", value: "Nyamira" },
+    { name: "Nyandarua", value: "Nyandarau" },
+    { name: "Nyeri", value: "Nyeri" },
+    { name: "Samburu", value: "Samburu" },
+    { name: "Siaya", value: "Siaya" },
+    { name: "Taita-taveta", value: "TaitaTaveta" },
+    { name: "Tana-river", value: "TanaRiver" },
+    { name: "Tharaka-nithi", value: "TharakaNithi" },
+    { name: "Trans-nzoia", value: "TransNzoia" },
+    { name: "Turkana", value: "Turkana" },
+    { name: "Uasin-gishu", value: "UasinGishu" },
+    { name: "Vihiga", value: "Vihiga" },
+    { name: "Wajir", value: "Wajir" },
+    { name: "West-pokot", value: "West Pokot" },
+    
+  ];
+
+  
   ChartJS.register(
     ArcElement,
     CategoryScale,
@@ -17,26 +83,34 @@ function Distribution() {
     Legend,
     Filler
   );
-  const[countyId,setCounty]=useState('Nairobi')
+  const chartRef = useRef(null);
+
+
+  //Chart states
+  const[chartType,setChartType]=useState('')
+  const [selectedChart, setSelectedChart] = useState("");
+  const [chartOpen, setChartOpen] = useState(false);
+  const [chartValue, setChartValue] = useState("");
+
+   //County States
+   const[countyId,setCountyId]=useState('')
+   const[countyOpen,setCountyOpen]=useState(false)
+  const[countySelected,setCountySelected]=useState('') 
+  const [countyValue, setCountyValue] = useState("");
+
+  //Chart Types
   const[lineChartData,setLineChartData]=useState({}) 
   const[barChartData,setBarChartData]=useState({})
-  const [data, setData] = useState({});
-  const[chartType,setChartType]=useState('')
+  const [pieChartData, setPieChartData] = useState({});
+  const [doughnutChartData, setDoughnutChartData] = useState({});
+   const [scatterChartData, setScatterChartData] = useState({});
 
-  const handleChartTypeChange = (e)=>{
-    const selectedChartType = e.target.value;
-    setChartType(selectedChartType);
-    console.log('select successfull',selectedChartType)
-  }
-  const handleCountyChange = (e)=>{
-    const selectedCounty = e.target.value
-    setCounty(selectedCounty)
-    console.log('Submit successful',selectedCounty)
-   // console.log('URL',url)
-  }
+  const [data, setData] = useState({});
+  
+
 useEffect(()=>{
-  const fetchData=()=>{
-    axios
+  const fetchData=async ()=>{
+   await axios
     .get(`https://jsonplaceholder.typicode.com/posts/${countyId}`)//PASTE URL HERE!!
     .then(
       response=>{
@@ -44,16 +118,20 @@ useEffect(()=>{
         setData(response.data)
       }
     )
-   
+   if(data){
+    updateChart()
+   }
 
   }
-  const updateChart = ()=>{
+  const updateChart =  ()=>{
     if(data){
-  const labels = Object.keys(data);
-  const propertyValues = labels.map((label) => data[label]);            
-      switch(chartType){
-         case 'line-chart':
-          setLineChartData({
+  const labels =   Object.keys(data);
+  const propertyValues = labels.map((label) => data[label]); 
+  console.log("Object keys",labels)  
+  console.log("Property",propertyValues)           
+   switch(chartType){
+  case 'line-chart':
+    setLineChartData({
             labels,
             datasets:[
                 {
@@ -80,12 +158,67 @@ useEffect(()=>{
             ],
         })
         break
+        case 'pie-chart':
+        setPieChartData({
+          labels,
+          datasets: [
+            {
+              data: propertyValues,            
+              backgroundColor: ['red', 'orange', 'yellow', 'green', 'blue'],
+            },
+          ],
+        })
+        break;
+          case 'scatter-chart':
+            setScatterChartData({
+              datasets: [
+                {
+                  label: 'Scatter Data',
+                  data: labels.map((label, index) => ({ x: index, y: propertyValues[index] })),
+                  backgroundColor: 'rgba(255, 99, 132, 0.5)',
+                },
+              ],
+            });
+            break;
+          case 'doughnut-chart':
+          setDoughnutChartData({
+            labels,
+            datasets: [
+              {
+                data: propertyValues,
+                backgroundColor: ['red', 'orange', 'yellow', 'green', 'blue'],
+              },
+            ],
+          });
+          break;  
+      default:
+        break;
+    
       }
     }
-  }
+   }
   fetchData()
-  //updateChart()
+ updateChart()
 },[countyId,chartType])
+const handleDownloadPDF = () => {
+  // Use html2canvas to capture the chart as an image
+  html2canvas(chartRef.current)
+    .then((canvas) => {
+      // Convert the canvas to a data URL
+      const dataUrl = canvas.toDataURL('image/png');
+
+      // Initialize jsPDF
+      const pdf = new jsPDF();
+
+      // Add the image to the PDF
+      pdf.addImage(dataUrl, 'PNG', 10, 10, 190, 100);
+
+      // Save or open the PDF
+      pdf.save('chart.pdf');
+    })
+    .catch((error) => {
+      console.error('Error capturing chart:', error);
+    })}
 
    
   
@@ -93,79 +226,153 @@ useEffect(()=>{
 
 
   return (
-    <div className='container mx-auto'>
-    
-    <div className='flex flex-row items-center justify-center'>
-        <div className=''>
-                <select value={chartType} onChange={handleChartTypeChange}>
-                    <option value="bar-chart">Bar Graph</option>
-                    <option value="line-chart">Line Graph</option>
-                    <option value="scatter-chart">Scatter Map</option>
-                </select>
-            
-        </div>
-        <div>
-            
-                <select value={countyId} onChange={handleCountyChange} >
-                  <option value='Baringo'>Baringo</option>
-                  <option value='Bomet'>Bomet</option>
-                  <option value='Bungoma'>Bungoma</option>
-                  <option value='Busia'>Busia</option>
-                  <option value='Elgeyo-marakwet'>Elgeyo Marakwet</option>
-                  <option value='Embu'>Embu</option>
-                  <option value='Garissa'>Garissa</option>
-                  <option value='Homabay'>HomaBay</option>
-                  <option value='Isiolo'>Isiolo</option>
-                  <option value='Kajiado'>Kajiado</option>
-                  <option value='Kakamega'>Kakamega</option>
-                  <option value='Kericho'>Kericho</option>
-                  <option value='Kiambu'>Kiambu</option>
-                  <option value='Kilifi'>Kilifi</option>
-                  <option value='Kirinyaga'>Kirinyanga</option>
-                  <option value='Kisii'>Kisii</option>
-                  <option value='Kisumu'>Kisumu</option>
-                  <option value='Kitui'>Kitui</option>
-                  <option value='Kwale'>Kwale</option>
-                  <option value='Laikipia'>Laikipia</option>
-                  <option value='Lamu'>Lamu</option>
-                  <option value='Machakos'>Machakos</option>
-                  <option value='Makueni'>Makueni</option>
-                  <option value='Mandera'>Mandera</option>
-                  <option value='Meru'>Meru</option>
-                  <option value='Migori'>Migori</option>
-                  <option value='Marsabit'>Marsabit</option>
-                  <option value='Mombasa'>Mombasa</option>
-                  <option value='Muranga'>Murang'a</option>
-                  <option value='Nairobi'>Nairobi</option>
-                  <option value='Nakuru'>Nakuru</option>
-                  <option value='Nandi'>Nandi</option>
-                  <option value='Narok'>Narok</option>
-                  <option value='Nyamira'>Nyamira</option>
-                  <option value='Nyandarua'>Nyandarau</option>
-                  <option value='Nyeri'>Nyeri</option>
-                  <option value='Samburu'>Samburu</option>
-                  <option value='Siaya'> Siaya</option>
-                  <option value='Taita-taveta'>Taita Taveta</option>
-                  <option value='Tana-river'>Tana River</option>
-                  <option value='Tharaka-nithi'>Tharaka Nithi</option>
-                  <option value='Trans-nzoia'>Trans Nzoia</option>
-                  <option value='Turkana'>Turkana</option>
-                  <option value='Uasin-gishu'>Uasin Gishu</option>
-                  <option value='Vihiga'>Vihiga</option>
-                  <option value='Wajir'>Wajir</option>
-                  <option value='West-pokot'>West Pokot</option>
-                  <option value='Uasin-gishu'>Uasin Gishu</option>
-
-                </select>
-            
-        </div>
+    <div className='bg-slate-50 w-full h-full flex-1 flex-col items-center justify-center'>
+    <div className='font-medium text-center text-[30px] m-0'>
+      <p className='px-8'>{countyId} County Report</p>
     </div>
-    <p>{countyId}</p>
-    <div className='w-[900px]'>
-            
-            {
-              chartType==='line-chart' && lineChartData && lineChartData?.datasets && (
-                <Line
+{/*County Dropdown  */}
+    <div className='flex h-48 space-x-48 mx-24'>
+      <div className='w-72 font-medium h-80 mt-3'>
+        <div
+          onClick={() => setCountyOpen(!countyOpen)}
+          className={`bg-slate-300 w-full p-2 flex items-center justify-between rounded ${
+            !countySelected && 'text-gray-700'
+          }`}
+        >
+          {countySelected ? (countySelected.length > 25 ? countySelected.substring(0, 25) + '...' : countySelected) : 'Select County'}
+          <BiChevronDown size={20} className={`${countyOpen && 'rotate-180'}`} />
+        </div>
+        <ul className={`bg-slate-500 mt-2 overflow-y-auto ${countyOpen ? 'max-h-32' : 'max-h-0'}`}>
+          <div className='flex items-center px-2 sticky top-0 bg-white'>
+            <AiOutlineSearch size={18} className='text-gray-700' />
+            <input
+              type='text'
+              value={countyValue}
+              onChange={(e) => setCountyValue(e.target.value.toLowerCase())}
+              placeholder='Enter county name'
+              className='placeholder:text-gray-700 p-2 outline-none'
+            />
+          </div>
+          {counties.map((county) => (
+            <li
+              key={county.value}
+              className={`p-2 text-sm hover:bg-sky-600 hover:text-white ${
+                county.name.toLowerCase() === countySelected.toLowerCase() && 'bg-sky-600 text-white'
+              } ${county.name.toLowerCase().startsWith(inputValue) ? 'block' : 'hidden'}`}
+              onClick={() => {
+                setCountySelected(county.name);
+                setCountyId(county.value);
+                setCountyOpen(false);
+                console.log(countyId);
+              }}
+            >
+              {county.name}
+            </li>
+          ))}
+        </ul>
+      </div>
+
+      <div className='w-72 font-medium h-80 mt-3'>
+        <div
+          onClick={() => setChartOpen(!chartOpen)}
+          className={`bg-slate-300 w-full p-2 flex items-center justify-between rounded ${!selectedChart && 'text-gray-700'}`}
+        >
+          {selectedChart ? (selectedChart.length > 25 ? selectedChart.substring(0, 25) + '...' : selectedChart) : 'Select Display'}
+          <BiChevronDown size={20} className={`${open && 'rotate-180'}`} />
+        </div>
+        <ul className={`bg-slate-500 mt-2 overflow-y-auto ${open ? 'max-h-32' : 'max-h-0'}`}>
+          <div className='flex items-center px-2 sticky top-0 bg-white'>
+            <AiOutlineSearch size={18} className='text-gray-700' />
+            <input
+              type='text'
+              value={chartValue}
+              onChange={(e) => setChartValue(e.target.value.toLowerCase())}
+              placeholder='Enter chart name'
+              className='placeholder:text-gray-700 p-2 outline-none'
+            />
+          </div>
+          {charts.map((chart) => (
+            <li
+              key={chart.value}
+              className={`p-2 text-sm hover:bg-sky-600 hover:text-white ${
+                chart.name.toLowerCase() === selected.toLowerCase() && 'bg-sky-600 text-white'
+              } ${chart.name.toLowerCase().startsWith(inputValue) ? 'block' : 'hidden'}`}
+              onClick={() => {
+                setSelectedChart(chart.name);
+                setChartType(chart.value);
+                setChartOpen(false);
+                console.log(chartType);
+              }}
+            >
+              {chart.name}
+            </li>
+          ))}
+        </ul>
+      </div>
+    </div>
+    <button onClick={handleDownloadPDF}>Download Chart as PDF</button> 
+    <div className='w-full h-auto flex items-center justify-center'>
+      <div className=' relative w-3/4 h-3/4' ref={chartRef} >
+        {chartType === 'line-chart' && lineChartData && lineChartData.datasets && (
+          <Line
+            options={{
+              responsive: true,
+              minBarLength: 100,
+              plugins: {
+                legend: {
+                  position: 'top',
+                },
+                title: {
+                  display: true,
+                  text: `${chartType}`,
+                },
+              },
+            }}
+            data={lineChartData}
+          />
+        )}
+
+        {chartType === 'bar-chart' && barChartData && barChartData.datasets && (
+          <Bar
+            options={{
+              responsive: true,
+              plugins: {
+                legend: {
+                  position: 'top',
+                },
+                title: {
+                  display: true,
+                  text: getCurrentTimeAndDate(),
+                },
+              },
+            }}
+            data={barChartData}
+          />
+        )}
+
+        {chartType === 'pie-chart' && pieChartData && pieChartData.datasets && (
+          <Pie
+            options={{
+              responsive: true,
+              radius:'60%',
+              
+              
+              plugins: {
+                legend: {
+                  position: 'below',
+                },
+                title: {
+                  display: false,
+                  text: 'Revenue',
+                },
+              },
+            }}
+            data={pieChartData}
+          />
+        )}
+        {
+              chartType==='scatter-chart' && scatterChartData && scatterChartData?.datasets && (
+                <Scatter
                 options={ {
                     responsive: true,
                     plugins: {
@@ -178,15 +385,15 @@ useEffect(()=>{
                       },
                     },
                   }} 
-                data={lineChartData}
+                data={scatterChartData}
                 
                 />
                )
 
             }
             {
-              chartType==='bar-chart' && barChartData && barChartData?.datasets && (
-                <Bar
+              chartType==='doughnut-chart' && doughnutChartData && doughnutChartData?.datasets && (
+                <Doughnut
                 options={ {
                     responsive: true,
                     plugins: {
@@ -199,16 +406,17 @@ useEffect(()=>{
                       },
                     },
                   }} 
-                data={barChartData}
+                data={doughnutChartData}
                 
                 />
                )
 
             }
-                          
-        </div>
-
+      </div>
     </div>
+
+    <button onClick={handleDownloadPDF}>Download Chart as PDF</button> 
+  </div>
   )
 }
 

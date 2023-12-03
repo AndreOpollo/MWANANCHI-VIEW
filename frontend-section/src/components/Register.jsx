@@ -59,7 +59,7 @@ function Register() {
 
         </div>
         <div className="relative my-4">
-            <input type="password" id='cpassword' {...register('cpassword',{
+            <input type="cpassword" id='cpassword' {...register('cpassword',{
                 required:{
                     value:true,
                     message:'Confirm password required!'
@@ -78,7 +78,7 @@ function Register() {
         
       </form>
       <div className="flex justify-between items-center">
-              <Link to='/' className="text-blue-500">Already have an account?Login</Link>
+              <Link to='/login' className="text-blue-500">Already have an account?Login</Link>
                </div>
     </div>
     <DevTool control={control}/>
