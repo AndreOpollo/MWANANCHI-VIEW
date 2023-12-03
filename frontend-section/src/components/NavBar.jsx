@@ -1,13 +1,20 @@
 import React from 'react'
 import Logo from '../assets/kenyan2.jpg'
-import { NavLink, Outlet } from 'react-router-dom'
+import { NavLink, Outlet, useNavigate } from 'react-router-dom'
 
 
 function NavBar() {
+  const navigate=useNavigate()
+  const handleLogout =()=>{
+    navigate("/")
+
+    
+  }
+
   return (
     
-      <div className='container min-h-screen bg-gray-200 bg-opacity-2 bg-center'>
-        <nav className='flex items-center'>
+      <div className='container min-h-screen  bg-gray-200 bg-opacity-2 bg-center'>
+        <nav className='w-full flex items-center px-4 left-0'>
         <div className='w-14 m-4 flex flex-row'> 
         <img src={Logo}
         className='object-contain'
@@ -27,7 +34,7 @@ function NavBar() {
             <NavLink to='report' className='p-2 hover:bg-slate-300 hover:rounded-md'>Report System Problem</NavLink>
             </li>
             <li className='list-none inline-block font-medium px-5 m-5'>
-            <button onClick={()=>navigate('/login')}className=' text-black rounded-md  font-medium inline-block my-4 ml-4'>Logout</button>
+            <button onClick={handleLogout}className=' text-black rounded-md  font-medium inline-block my-4 ml-4'>Logout</button>
             </li>
 
         </ul>

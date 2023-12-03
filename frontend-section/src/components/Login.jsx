@@ -16,12 +16,12 @@ function Login() {
       setShowPassword(!showPassword);
     };
     const{errors} = formState
-    const URL = ('')/*PASTE URL HERE*/
+    const URL = ('http://127.0.0.1:8000/login/')/*PASTE URL HERE*/
     const navigate = useNavigate()
     const onSubmit = async (data) =>{
       try {
       const response= await axios.post(URL,data)
-       if(response.status === 200){
+       if(response.data.status === 'success'){
        
         alert('Login successful!');
         reset()        

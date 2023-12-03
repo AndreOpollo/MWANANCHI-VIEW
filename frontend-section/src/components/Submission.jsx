@@ -3,12 +3,14 @@ import { useForm } from 'react-hook-form'
 import axios from 'axios'
 
 function Submission() {
-    const URL = ('')//Post API Endpoint Here!!
+    const URL = ('http://127.0.0.1:8000/postcountyservice/')//Post API Endpoint Here!!
     const form = useForm()
     const{register,formState,handleSubmit,watch,control,reset} = form
     const{errors,isDirty, isValid} = formState
     const onSubmit = data =>{
-        //axios.post(URL,data)
+        axios.post(URL,data)
+        alert('Service submitted succesfully')
+        reset()
         console.log('form submitted',data)
     }
 
@@ -18,7 +20,7 @@ function Submission() {
     <div className='container mx-auto bg-white'>
     <div className='flex h-screen items-center justify-center'>
         <div className=' bg-slate-900 border border-slate-600  rounded-md p-8 shadow-lg backdrop-filter backdrop-blur-lg bg-opacity-30 relative transition-all duration-200'>
-            <h1 className='text-4xl text-white font-bold text-center mb-6' >Submission</h1>
+            <h1 className='text-4xl text-black font-bold text-center mb-6' >Submission</h1>
             <form onSubmit={handleSubmit(onSubmit)} noValidate>
             <div className='relative my-4'>
             <select  className=' w-96 font-medium  p-1'id="county" {...register('county')}> 

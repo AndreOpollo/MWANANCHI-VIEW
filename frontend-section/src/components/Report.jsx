@@ -3,7 +3,7 @@ import { useForm } from 'react-hook-form'
 import axios from 'axios'
 
 function Report() {
-  const URL = ('')//Post API Endpoint Here!!
+  const URL = ('http://127.0.0.1:8000/reportproblem/')//Post API Endpoint Here!!
   const form = useForm()
   const{register,formState,handleSubmit,watch,control,reset} = form
   const{errors,isDirty, isValid} = formState
@@ -16,7 +16,7 @@ function Report() {
     <div className='container mx-auto bg-white'>
     <div className='flex h-screen items-center justify-center'>
         <div className=' bg-slate-900 border border-slate-600  rounded-md p-8 shadow-lg backdrop-filter backdrop-blur-lg bg-opacity-30 relative transition-all duration-200'>
-            <h1 className='text-4xl text-white font-bold text-center mb-6' >Report System Challenge</h1>
+            <h1 className='text-4xl text-black font-bold text-center mb-6' >Report System Challenge</h1>
             <form onSubmit={handleSubmit(onSubmit)} noValidate>
        
             <div className='relative my-4'>
